@@ -56,7 +56,7 @@ and publishable scientific papers.
 
 This entire document is composed using the R Markdown language.
 Hence, all code used to clean, prepare and filter the data, along with the code for creating the 
-visualisations are included, where necesarry, in this report. These code blocks can be recognised, as
+visualisations are included, where necessary, in this report. These code blocks can be recognised, as
 they are syntax highlighted. The R Markdown for this document can be accessed on GitHub[1].
 
 Any text output from running an R command will have a double hash prefix, for e.g. in R, the output
@@ -79,6 +79,21 @@ data exploration as it allows for platform independent data manipulation.
 In the case of this coursework, \textbf{dplyr} will be used on a data frame, which is created from the 
 RoadData.csv file.
 
+The \textbf{ggplot2} package follows the \textit{"grammar of graphics"} ethos, where layers are used to
+bring visualisations to life. For e.g. following the \textit{"grammar of graphics"} ethos to generate 
+a simple scatter plot, one would need to create an empty plot, with two axis, then add another layer 
+which will contain the labels for the axis', followed by another layer, which contains the points for 
+the data and another layer containing the line of best fit for the particular plot. Figure 1 shows 
+the process of adding layers.
+
+![The Grammar of Graphics' layers](images/grammar_of_graphics_2.png)
+
+````{r echo=FALSE, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+```
+
 \newpage
 Let's begin by reading the data in from the csv file as a data frame:
 \bigskip
@@ -100,10 +115,11 @@ This is an impressive amount of data and because of the large amount of variable
 it's more efficient to clean the data on an as needed basis, i.e. just before feeding the data
 to each visualisation.
 
-Let's now see date range of our data:
+Let's now see the date range of our data:
 \bigskip
 ```{r echo=TRUE}
 library(lubridate)
+
 data %>% 
   mutate(date = dmy(date)) %>%
   summarise(min = min(date),
@@ -115,14 +131,10 @@ So we have data from the 1st of January 2015 till the 31st of December 2015.
 This means all visualisations will only reflect trends and patterns of road accidents in 2015.
 
 
-Please note that all visualisations are embedded into this PDF Document as Scalable Vector Graphics
+Please note that all visualisations from Figure 2 onwards are embedded into this PDF document as Scalable Vector Graphics
 (SVG), so if a visualisation looks too small, one can zoom in without loosing image resolution.
-
-```{r echo=FALSE, message=FALSE}
-library(dplyr)
-library(ggplot2)
-library(gridExtra)
-```
+But, this will also mean a high render time, so give the document a couple of seconds if rendering
+takes a while when viewing the visualisations.
 
 
 
@@ -154,15 +166,15 @@ To answer this question, we need all male and female driver ages, which can be o
 
 * Remove -1 values from 'age_of_driver' column
 \
-* Retrieve data from 'age_of_driver' column where values equal 1 and assign it to a data frame 1
+* Retrieve data from 'age_of_driver' column where values equal 1 and assign it to a data frame
 \
-* Retrieve data from 'age_of_driver' column where values equal 2 and assign it to a data frame 2
+* Retrieve data from 'age_of_driver' column where values equal 2 and assign it to a data frame
 \
-* Create a data frame with two columns, age and sex, the latter being populated with 'Male' or 'Female' depending on the sex of the variable
+* Create a data frame with two columns, age and sex, the latter being populated with 'Male' or 'Female' depending on the sex variable
 \
 * Combine the two data frames together to form a single data frame with male and female ages
 \
-* Create two histograms with repsect to age, one for male and and another for female, and overlay the plots
+* Create two histograms with respect to age, one for male and and another for female, and overlay the plots
 
 \bigskip
 
@@ -325,9 +337,9 @@ people, which in-turn increases the risk of an accident.
 
 \bigskip
 ### Aim
-What are the top 20 accident prone districts?
+What were the top 20 accident prone districts?
 
-Are there particular districts where accidents are more likely to occur?
+Were there particular districts where the number of accidents exceeded over the other districts?
 To answer this question, the local authority district IDs needs to be obtained.
 But let's also make this plot a bit more useful, where the proportion of accident severity is also
 shown. For this visualisation, it should be a combination of a Word Cloud and a bar plot.
@@ -343,11 +355,11 @@ shown. For this visualisation, it should be a combination of a Word Cloud and a 
 \
 * Retrieve the top 20 districts from the data frame
 \
-* Substitute the values for each district ID with it's corresponding value from the data dictionary
+* Substitute the values for each district ID with its corresponding value from the data dictionary
 \
 * Create the word cloud
 \
-* Create the stacked bar plot
+* Create the stacked bar plot by adding a bar layer and specifying the fill value to accident severity
 
 \bigskip
 
@@ -506,8 +518,8 @@ grid.arrange(plot_word_cloud, plot_bar_districts)
 
 \newpage
 
-As you can see Birmingham had the highest amount of accidents compared to any other local district.
-But why isn't London at the top? Well London is a Metropolis, made up of several local districts.
+As you can see Birmingham had the highest number of accidents compared to any other local district.
+But why isn't London at the top? Well that's because London is a Metropolis, made up of several local districts.
 
 \bigskip
 \bigskip
@@ -522,8 +534,8 @@ accidents?
 \bigskip
 ### Data Preparation & Visualisation
 
-For this visualisation, two density plots are best suited, one for weather vs No. of Accidents,
-and another for light conditions vs No. of Accidents.
+For this visualisation, two density plots are best suited, one for Weather vs No. of Accidents,
+and another for Light Conditions vs No. of Accidents.
 
 A density plot is quite simple, where peaks correlate to the number of values, or how 'dense' the data
  is for that particular value.
@@ -536,9 +548,9 @@ A density plot is quite simple, where peaks correlate to the number of values, o
   * Filter out any values outside 1 - 6
   * Substitute values from the Data Dictionary
 \
-* Create the weather conditions vs accident density plot
+* Create the weather conditions vs accident density plot by adding a density layer with colour set to weather conditions
 \
-* Create the light conditions vs accident density plot
+* Create the light conditions vs accident density plot by adding a density layer with colour set to light conditions
 
 \bigskip
 
@@ -632,8 +644,9 @@ grid.arrange(plot_weather, plot_light)
 ```
 
 \newpage
-From the above visualisation, we can see that most accidents occur at night with street lights on, in
-fine weather conditions.
+From Figure 5, we can see that most accidents occured during fair weather.
+Light conditions does seem to have an effect, as the majority of accidents occured during night time 
+with street lights on.
 
 \bigskip
 \bigskip
@@ -653,7 +666,7 @@ For the weekday plot:
 
 * Substitute weekday ID  in the 'day_of_week' column with corresponding values from the Data Dictionary
 \
-* Create the weekday bar plot by taking the frequency of each frequecy into account.
+* Create the weekday bar plot by taking the frequency of each week into account.
 \
 * Arrange the bars in descending order
 \
@@ -661,7 +674,7 @@ For the weekday plot:
 \
 * Convert time data to POSIX time
 \
-* Create the time density plot
+* Create the time density plot by adding a density layer with the POSIX time data
 
 \bigskip
 
@@ -739,7 +752,7 @@ grid.arrange(plot_days, plot_time)
 
 \newpage
 
-From the above visualisation, we can conclude that Friday had the most number of accidents followed by
+From Figure 6, we can conclude that Friday had the most number of accidents followed by
 Thursday. Time also had an effect, where the highest peak was around the evening rush, 5 - 6pm, followed
 by the second highest peak during the morning  rush 8 - 10am.
 
@@ -751,7 +764,7 @@ by the second highest peak during the morning  rush 8 - 10am.
 ### Aim
 
 Is there a seasonality to the frequency of accidents and what journey purpose accounted for the majority
-of accidents? Also what was the deadliest day of the year, i.e. which day had the most accidents?
+of accidents? Also, what was the deadliest day of the year, i.e. which day had the most accidents?
 
 \bigskip
 ### Data Preparation & Visualisation
@@ -760,9 +773,9 @@ For this plot a line graph would be best along with a bar plot for the deadliest
 
 * Retrieve data from the 'journey_purpose_of_driver' & 'date' columns where journey purpose values are in the range 1 - 5.
 \
-* Convert the date values to Month name abbreviations.
+* Convert the date values to month name abbreviations.
 \
-* Create a data frame with the frequency of the month
+* Create a data frame with the frequency of each month
 \
 * Substitute journey purpose ID with its corresponding value in the Data Dictionary
 \
@@ -874,16 +887,16 @@ plot_date <-
 ```
 
 \bigskip
-```{r fig.cap="Seasonality and Journey Purpose of drivers with the top 6 deadliest days", echo = FALSE, fig.align='center',fig.height = 10, fig.width = 8}
+```{r fig.cap="Seasonality and Journey Purpose of drivers with the top 6 deadliest days of 2015", echo = FALSE, fig.align='center',fig.height = 10, fig.width = 8}
 require(gridExtra)
 grid.arrange(plot_month, plot_date)
 ```
 \bigskip
 
 \newpage
-Figure 6 shows 'Journey as part of work' had the highest number of accidents with clear seasonal peaks
+Figure 7 shows 'Journey as part of work' had the highest number of accidents with clear seasonal peaks
 around September and January, when schools open and right after the New Year holiday. The second bar 
-plot shows that the deadliest day of that year was the 10th of February, followed by the 11th of May.
+plot shows that the deadliest day of 2015 was the 10th of February, followed by the 11th of May.
 
 
 \bigskip
@@ -893,21 +906,21 @@ plot shows that the deadliest day of that year was the 10th of February, followe
 \bigskip
 ### Aim
 
-What type of roads are accidents more likely to occur? Does speed limit have an effect on the number
+On what type of roads are accidents more likely to occur? Does speed limit have an effect on the number
 of accidents? And on which road in the UK did the most amount of fatal accidents occur?
 
 To answer these questions, a unique dashboard is in order. Where two doughnut charts will present the
 data for speed limits and its proportion of accidents and road classes with its proportion of accidents.
 
 This can be followed by two vertical bar graphs, one displaying the top 5 deadliest roads in the UK,
-and another displaying the top 5 road types with the highest amount of accidents in the UK.
+and another displaying the top 5 road types with the highest number of accidents in the UK.
 
 \bigskip
 ### Data Preparation & Visualisation
 
-For the first doughnut chart, speed limits and its proportion of accident:
+For the first doughnut chart, speed limits and its proportion of accidents:
 
-* Retireve speed limits
+* Retrieve speed limits
 \
 * Filter out values 0 and 10
 \
@@ -948,7 +961,7 @@ For the third plot, a bar graph, representing the top 5 roads in the UK with the
 \
 * Create a data frame with the frequencies of each road name
 \
-* Arrange the data frame in descending order, so the road names with the most fatalities is at the top
+* Arrange the data frame in descending order, so the road names with the most fatalities are at the top
 \
 * Retrieve the top 5 road names with the most fatalities
 \
@@ -960,9 +973,9 @@ For the fourth plot, a bar graph, road types with the highest number of accident
 \
 * Filter out values -1 and 9
 \
-* Substitute road type IDs with their corresponing values in the Data Dictionary
+* Substitute road type IDs with their corresponding values in the Data Dictionary
 \
-* Create the road bar plot
+* Create the bar plot
 
 
 \bigskip
@@ -1194,15 +1207,15 @@ grid.arrange(plot_speed, plot_road_class, plot_road_name, plot_road_type, ncol=2
 
 \newpage
 
-From Figure 7, we can conclude that accidents are more likely to occur in 30mph zones.
-A roads in the UK account for the highest number of accidents and single carriageways have the highest 
+From Figure 8, we can conclude that accidents are more likely to occur in 30mph zones.
+'A' roads in the UK accounted for the highest number of accidents and single carriageways have the highest 
 number of accidents.
 
-Finally, the road with the most fatalities is the M40.
+Finally, the road with the most fatalities was the M40.
 
 \bigskip
 \bigskip
-## Vehicle Manouvre
+## Vehicle Manoeuvre
 
 \bigskip
 ### Aim
@@ -1296,7 +1309,7 @@ treemap(manoeuvre,
 \bigskip
 
 \newpage
-From Figure 8, we can clearly see that 'Going ahead other' caused the highest number of accidents.
+From Figure 9, we can clearly see that 'Going ahead other' caused the highest number of accidents.
 Interestingly, turning right seems to be a hazardous manoeuvre.
 
 \bigskip
@@ -1329,7 +1342,7 @@ rows or columns depending on the selected distance measure.
 
 The steps for this visualisation is better explained with the R code.
 
-* First, let's retrieve the vehicle type propulsion code & accident severity data and filter out -1 values from both vehicle type and propulsion code.
+* First, let's retrieve the vehicle type, propulsion code & accident severity data and filter out -1 values from both vehicle type and propulsion code.
 
 \bigskip
 ```{r, echo=TRUE}
@@ -1359,7 +1372,7 @@ head(d1)
 \
 * Then assign the frequency of each propulsion code for each vehicle type.
 \
-* And finally assign the frequency of each accident severity for each vehicle type
+* Then assign the frequency of each accident severity for each vehicle type
 
 \bigskip
 ```{r echo=TRUE}
@@ -1422,7 +1435,7 @@ for(vehicle_type in vehicle_types)
 head(d1)
 ```
 \bigskip
-* And finally substitute each vehicly type ID with its corresponding value from the Data Dictionary.
+* And finally substitute each vehicle type ID with its corresponding value from the Data Dictionary.
 
 \bigskip
 ```{r}
@@ -1501,7 +1514,7 @@ plot(dend)
 We can observe 11 major clusters with large variances with each other.
 How different a cluster is shown with each node's height and not by their widths.
 
-So in this instance, Motorcycles over 500cc and Motorcycles less than or eqaul to 125cc are in the same
+So in this instance, Motorcycles over 500cc and Motorcycles less than or equal to 125cc are in the same
 cluster group. From there, there is a parent cluster, where Motorcycles over 500cc and Motorcycles less
 than or equal to 125cc is the first group, and Goods Vehicles over or equal to 7.5 tonnes is the other
 group in this parent cluster.
@@ -1510,8 +1523,8 @@ This process is repeated for each cluster until you reach the top, where every n
 entire cluster.
 
 There are some very interesting observations here, cars and taxis are in totally different clusters.
-Another interesting observation is how similar Goods Vehicles over 7.5 tonnes are to motorcyles over 
-500cc, there is a common saying motorcylists and large goods vehicles are a dangerous combination, 
+Another interesting observation is how similar Goods Vehicles over 7.5 tonnes are to motorcycles over 
+500cc, there is a common saying motorcyclists and large goods vehicles are a dangerous combination, 
 and with relation to accident severity, the dendrogram does seem to add evidence to this saying.
 
 
@@ -1657,6 +1670,7 @@ confusionMatrix(predictions, as.factor(test$accident_severity))
 
 \bigskip
 * We are seeing over 93% accuracy in classifying accident severity
+\
 * Now let's obtain and store the variable importance from our model
 
 \bigskip
@@ -1704,9 +1718,9 @@ plot_variable_importance
 
 
 \newpage
-
-
-
+From this data, we can clearly see that Engine Size, Speed Limit and Age of Driver were the three highest
+deciding factors for an accident and its severity for the year 2015. The least important factor was
+weather conditions with an importance value of 19.4%.
 
 
 \newpage
@@ -1717,9 +1731,9 @@ This coursework was probably the most interesting coursework out of the entire C
 And while it was time consuming, it definitely was the most fun and enjoyable coursework to date.
 
 The decision to use R instead of Tableau was a good idea at first, but it slowly turned out to be more
-daunting than imagined, partly because of only having an intermediate level knowledge of R.
+daunting than imagined, partly because of only having an intermediate level knowledge, of R.
 
-However, from the third visualisation onwards, things started to ease, as familiarity with R started to 
+However, from the third visualisation on-wards, things started to ease, as familiarity with R started to 
 take place. This was the turning point where the true power of R was revealed.
 
 If a person comes from a strong programming background, then R is one of the best alternatives to 
@@ -1733,11 +1747,11 @@ R is a very mature programming language, which means there are many ways to do a
 This often becomes a barrier when learning R, and it's not just with R, this trend can be seen with
 older and more mature programming languages such as Perl and Lisp.
 
-Overall, it has taken 44 hours to create this document.
+In total, it took 36 hours to create this document.
 
 One of the major advantages of using R over Tableau is that it gives more room for automation, as R is a
 programming language.
-But it also has many powerful libraries which will allow anyone to create powerful complex graphs that 
+It also has a vast array of powerful libraries which will allow anyone to create powerful and complex graphs that 
 normally would be difficult to create using other Graphical User Interface (GUI) based tools.
 
 When working in the industry, companies will often have their own unique colour palette that they will
@@ -1749,7 +1763,7 @@ For the visualisations in this document, colours from the Wes Anderson colour pa
 The \textbf{ggplot2} package truly did shine through this coursework. The customisation options are 
 endless with it.
 
-Using the \textbf{dplyr} to clean, filter and transform data was very intuitive, and this allowed for 
+Using the \textbf{dplyr} package to clean, filter and transform the data was very intuitive, and this allowed for 
 more complex transformations with ease, such as normalising age data using log transformation.
 
 On a cautionary note, which is quite relevant to Data Science in general is data validity.
@@ -1757,13 +1771,23 @@ For e.g. during the proofread of this document, some values looked a bit odd, an
 an error in the data transformation task was found. So mistakes can easily be made which could have
 dire consequences for companies that rely on this information.
 
-Overall, doing this coursework in R has become a worthwhile investment, as the skills learnt in R 
+Upon reflection, perhaps more complex insights could have been obtained if more time was spent on this
+coursework. One major problem was with explaining the steps taken to produce the visualisations,
+as when translating it from code to words, the document become larger than required; a surplus
+of 32 pages which totalled to 67 pages! Hence, a decision was made to link the R-markdown file for 
+this document as a reference that can be accesed online through GitHub.
+
+
+In conclusion, doing this coursework in R has become a worthwhile investment, as the skills learnt in R 
 through this coursework greatly impressed all Data Scientists at a recent interview for a graduate 
 Data Science job.
 
 \newpage
 \hrule
 # References
+
+[1] Thomas, D., 2020. Dominthomas/Roadaccidents_2015. [online] GitHub - Domin Thomas. 
+    Available at: *https://github.com/dominthomas/RoadAccidents_2015/blob/master/CI6320_Data_Analysis_2_K1651915.Rmd* [Accessed 23 March 2020].
 
 
 
